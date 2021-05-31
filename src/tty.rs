@@ -86,3 +86,28 @@ impl fmt::Write for Tty {
         Ok(())
     }
 }
+
+#[macro_export]
+macro_rules! tty_print {
+    ($($arg:tt)*) => ($crate::tty::_print(format_args!($($arg)*)));
+}
+
+#[macro_export]
+macro_rules! tty_println {
+    () => ($crate::tty_print!("\n"));
+    ($($arg:tt)*) => ($crate::tty_print!("{}\n", format_args!($($arg)*)));
+}
+
+#[macro_export]
+#[deprecated]
+macro_rules! char_color {
+    () => ($crate::char_color!($crate::vga::CharColor::new(vga::Color::White, vga::Color::Black)));
+    ($color:expr) => ($crate::tty::TTY.lock().set_char_color($color));
+}
+
+#[doc(hidden)]
+#[inline]
+pub fn _print(args: fmt::Arguments) {
+    use core::fmt::Write;
+    TTY.lock().write_fmt(args).unwrap();
+}
