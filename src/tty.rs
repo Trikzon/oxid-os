@@ -101,7 +101,7 @@ macro_rules! tty_println {
 #[macro_export]
 #[deprecated]
 macro_rules! char_color {
-    () => ($crate::char_color!($crate::vga::CharColor::new(vga::Color::White, vga::Color::Black)));
+    () => ($crate::char_color!($crate::vga::CharColor::new($crate::vga::Color::White, vga::Color::Black)));
     ($color:expr) => ($crate::tty::TTY.lock().set_char_color($color));
 }
 
