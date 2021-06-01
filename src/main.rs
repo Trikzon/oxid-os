@@ -1,14 +1,19 @@
 #![no_std]
 #![no_main]
-#![feature(asm)]
-#![allow(dead_code)]
+#![feature(asm, custom_test_frameworks)]
+#![reexport_test_harness_main = "test_main"]
+#![test_runner(libr_os::test::test_runner)]
+#![allow(dead_code, unreachable_code)]
 
 use core::panic::PanicInfo;
-use libr_os::{tty_println, vga};
+use libr_os::{tty_print, tty_println};
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
     tty_println!("Hello World{}", "!");
+
+    #[cfg(test)]
+    test_main();
 
     tty_println!("§0Black");
     tty_println!("§1Blue");
@@ -36,8 +41,6 @@ pub extern "C" fn _start() -> ! {
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    // libr_os::tty::TTY.lock().set_foreground_color(vga::Color::Red);
     tty_println!("§4{}§r", info);
-    // libr_os::tty::TTY.lock().set_foreground_color(vga::Color::White);
     loop {}
 }
