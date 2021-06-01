@@ -2,22 +2,22 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
 pub enum Color {
-    Black = 0,
-    Blue = 1,
-    Green = 2,
-    Cyan = 3,
-    Red = 4,
-    Magenta = 5,
-    Brown = 6,
-    LightGray = 7,
-    DarkGray = 8,
-    LightBlue = 9,
-    LightGreen = 10,
-    LightCyan = 11,
-    LightRed = 12,
-    Pink = 13,
-    Yellow = 14,
-    White = 15,
+    Black = 0,          // §0
+    Blue = 1,           // §1
+    Green = 2,          // §2
+    Cyan = 3,           // §3
+    Red = 4,            // §4
+    Magenta = 5,        // §5
+    Brown = 6,          // §6
+    LightGray = 7,      // §7
+    DarkGray = 8,       // §8
+    LightBlue = 9,      // §9
+    LightGreen = 10,    // §a
+    LightCyan = 11,     // §b
+    LightRed = 12,      // §c
+    Pink = 13,          // §d
+    Yellow = 14,        // §e
+    White = 15,         // §f
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

@@ -7,10 +7,13 @@ use volatile::Volatile;
 const VGA_WIDTH: usize = 80;
 const VGA_HEIGHT: usize = 25;
 
+const DEFAULT_FOREGROUND_COLOR: vga::Color = vga::Color::White;
+const DEFAULT_BACKGROUND_COLOR: vga::Color = vga::Color::Black;
+
 lazy_static! {
     pub static ref TTY: Mutex<Tty> = Mutex::new(Tty {
         column: 0,
-        char_color: vga::CharColor::new(vga::Color::White, vga::Color::Black),
+        char_color: vga::CharColor::new(DEFAULT_FOREGROUND_COLOR, DEFAULT_BACKGROUND_COLOR),
         buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
     });
 }
@@ -41,10 +44,21 @@ impl Tty {
     }
 
     pub fn put_str(&mut self, s: &str) {
-        for byte in s.bytes() {
+        let mut bytes = s.bytes();
+        while let Some(byte) = bytes.next() {
             match byte {
                 // printable IBM437 byte or newline
                 0x20..=0x7e | b'\n' => self.put_byte(byte),
+                // is color format prefix '§'
+                0xc2 => {
+                    if let Some(next) = bytes.next() {
+                        if next == 0xa7 {
+                            if let Some(color_code) = bytes.next() {
+                                self.read_color_code(color_code);
+                            }
+                        }
+                    }
+                },
                 // not part of the printable IBM437 range
                 _ => self.put_byte(0xfe),
             }
@@ -79,6 +93,10 @@ impl Tty {
         self.char_color.set_foreground(foreground_color);
     }
 
+    pub fn reset_foreground_color(&mut self) {
+        self.set_foreground_color(DEFAULT_FOREGROUND_COLOR);
+    }
+
     pub fn set_background_color(&mut self, background_color: vga::Color) {
         self.char_color.set_background(background_color);
         for row in 0..VGA_HEIGHT {
@@ -87,6 +105,33 @@ impl Tty {
                 prev_char.char_color.set_background(background_color);
                 self.buffer[row][column].write(prev_char);
             }
+        }
+    }
+
+    pub fn reset_background_color(&mut self) {
+        self.set_background_color(DEFAULT_BACKGROUND_COLOR);
+    }
+
+    fn read_color_code(&mut self, color_code: u8) {
+        match color_code {
+            b'r' => self.reset_foreground_color(),
+            b'0' => self.set_foreground_color(vga::Color::Black),
+            b'1' => self.set_foreground_color(vga::Color::Blue),
+            b'2' => self.set_foreground_color(vga::Color::Green),
+            b'3' => self.set_foreground_color(vga::Color::Cyan),
+            b'4' => self.set_foreground_color(vga::Color::Red),
+            b'5' => self.set_foreground_color(vga::Color::Magenta),
+            b'6' => self.set_foreground_color(vga::Color::Brown),
+            b'7' => self.set_foreground_color(vga::Color::LightGray),
+            b'8' => self.set_foreground_color(vga::Color::DarkGray),
+            b'9' => self.set_foreground_color(vga::Color::LightBlue),
+            b'a' | b'A' => self.set_foreground_color(vga::Color::LightGreen),
+            b'b' | b'B' => self.set_foreground_color(vga::Color::LightCyan),
+            b'c' | b'C' => self.set_foreground_color(vga::Color::LightRed),
+            b'd' | b'D' => self.set_foreground_color(vga::Color::Pink),
+            b'e' | b'E' => self.set_foreground_color(vga::Color::Yellow),
+            b'f' | b'F' => self.set_foreground_color(vga::Color::White),
+            _ => crate::tty_println!("\n[Error] Invalid color code."),
         }
     }
 }
