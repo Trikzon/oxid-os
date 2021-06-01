@@ -160,3 +160,28 @@ pub fn _print(args: fmt::Arguments) {
     use fmt::Write;
     TTY.lock().write_fmt(args).unwrap();
 }
+
+#[cfg(test)]
+pub mod tests {
+    #[test_case]
+    fn test_tty_println_simple() {
+        tty_println!("test_tty_println_simple output");
+    }
+
+    #[test_case]
+    fn test_tty_println_many() {
+        for _ in 0..200 {
+            tty_println!("test_tty_println_many output");
+        }
+    }
+
+    #[test_case]
+    fn test_tty_println_output() {
+        let s = "Some test string that fits on a single line.";
+        tty_println!("{}", s);
+        for (i, c) in s.chars().enumerate() {
+            let screen_char = super::TTY.lock().buffer[super::VGA_HEIGHT - 2][i].read();
+            assert_eq!(char::from(screen_char.ibm437_character), c);
+        }
+    }
+}
