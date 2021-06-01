@@ -1,5 +1,5 @@
 use core::panic::PanicInfo;
-use crate::{qemu, tty_print, tty_println};
+use crate::{qemu, serial_print, serial_println};
 
 pub trait Testable {
     fn run(&self) -> ();
@@ -10,14 +10,14 @@ impl<T> Testable for T
         T: Fn(),
 {
     fn run(&self) {
-        tty_print!("{}...\t", core::any::type_name::<T>());
+        serial_print!("{}...\t", core::any::type_name::<T>());
         self();
-        tty_println!("[ok]");
+        serial_println!("[ok]");
     }
 }
 
 pub fn test_runner(tests: &[&dyn Testable]) {
-    tty_println!("Running {} tests", tests.len());
+    serial_println!("Running {} tests", tests.len());
     for test in tests {
         test.run();
     }
@@ -25,8 +25,8 @@ pub fn test_runner(tests: &[&dyn Testable]) {
 }
 
 pub fn test_panic_handler(info: &PanicInfo) -> ! {
-    tty_println!("[failed]\n");
-    tty_println!("Error: {}\n", info);
+    serial_println!("[failed]\n");
+    serial_println!("Error: {}\n", info);
     qemu::exit(qemu::ExitCode::Failure);
     loop { }
 }

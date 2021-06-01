@@ -5,11 +5,10 @@
 #![reexport_test_harness_main = "test_main"]
 
 pub mod qemu;
+pub mod serial;
 pub mod test;
 pub mod tty;
 pub mod vga;
-
-use core::panic::PanicInfo;
 
 #[cfg(test)]
 #[no_mangle]
@@ -20,7 +19,7 @@ pub extern "C" fn _start() -> ! {
 
 #[cfg(test)]
 #[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
+fn panic(info: &core::panic::PanicInfo) -> ! {
     test::test_panic_handler(info)
 }
 

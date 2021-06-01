@@ -6,7 +6,7 @@
 #![allow(dead_code, unreachable_code)]
 
 use core::panic::PanicInfo;
-use libr_os::{tty_print, tty_println};
+use libr_os::{serial_println, tty_println};
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
@@ -33,6 +33,9 @@ pub extern "C" fn _start() -> ! {
     tty_println!("§FWhite");
     tty_println!("§rReset");
     tty_println!("§1Multi§2-§3Color§4!!!§r");
+
+    serial_println!("Test");
+    serial_println!("Hmmmmmmmm");
 
     panic!("Forcing a crash...");
 

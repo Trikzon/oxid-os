@@ -157,6 +157,6 @@ macro_rules! tty_println {
 #[doc(hidden)]
 #[inline]
 pub fn _print(args: fmt::Arguments) {
-    use core::fmt::Write;
+    use fmt::Write;
     TTY.lock().write_fmt(args).unwrap();
 }
