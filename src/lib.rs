@@ -14,7 +14,7 @@ pub mod vga;
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
     test_main();
-    loop { }
+    loop {}
 }
 
 #[cfg(test)]
@@ -22,4 +22,3 @@ pub extern "C" fn _start() -> ! {
 fn panic(info: &core::panic::PanicInfo) -> ! {
     test::test_panic_handler(info)
 }
-

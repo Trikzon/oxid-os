@@ -2,22 +2,22 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
 pub enum Color {
-    Black = 0,          // §0
-    Blue = 1,           // §1
-    Green = 2,          // §2
-    Cyan = 3,           // §3
-    Red = 4,            // §4
-    Magenta = 5,        // §5
-    Brown = 6,          // §6
-    LightGray = 7,      // §7
-    DarkGray = 8,       // §8
-    LightBlue = 9,      // §9
-    LightGreen = 10,    // §a
-    LightCyan = 11,     // §b
-    LightRed = 12,      // §c
-    Pink = 13,          // §d
-    Yellow = 14,        // §e
-    White = 15,         // §f
+    Black = 0,       // §0
+    Blue = 1,        // §1
+    Green = 2,       // §2
+    Cyan = 3,        // §3
+    Red = 4,         // §4
+    Magenta = 5,     // §5
+    Brown = 6,       // §6
+    LightGray = 7,   // §7
+    DarkGray = 8,    // §8
+    LightBlue = 9,   // §9
+    LightGreen = 10, // §a
+    LightCyan = 11,  // §b
+    LightRed = 12,   // §c
+    Pink = 13,       // §d
+    Yellow = 14,     // §e
+    White = 15,      // §f
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -47,6 +47,9 @@ pub struct Char {
 
 impl Char {
     pub fn new(ibm437_character: u8, char_color: CharColor) -> Self {
-        Self { ibm437_character, char_color }
+        Self {
+            ibm437_character,
+            char_color,
+        }
     }
 }

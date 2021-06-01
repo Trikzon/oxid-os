@@ -26,5 +26,8 @@ macro_rules! serial_println {
 #[inline]
 pub fn _print(args: fmt::Arguments) {
     use fmt::Write;
-    SERIAL.lock().write_fmt(args).expect("Failed to print to serial.");
+    SERIAL
+        .lock()
+        .write_fmt(args)
+        .expect("Failed to print to serial.");
 }

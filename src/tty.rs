@@ -1,5 +1,5 @@
-use core::fmt;
 use crate::vga;
+use core::fmt;
 use lazy_static::lazy_static;
 use spin::Mutex;
 use volatile::Volatile;
@@ -58,7 +58,7 @@ impl Tty {
                             }
                         }
                     }
-                },
+                }
                 // not part of the printable IBM437 range
                 _ => self.put_byte(0xfe),
             }
