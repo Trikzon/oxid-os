@@ -4,6 +4,7 @@
 #![test_runner(crate::test::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+pub mod qemu;
 pub mod test;
 pub mod tty;
 pub mod vga;

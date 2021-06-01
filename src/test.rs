@@ -1,5 +1,5 @@
 use core::panic::PanicInfo;
-use crate::{tty_print, tty_println};
+use crate::{qemu, tty_print, tty_println};
 
 pub trait Testable {
     fn run(&self) -> ();
@@ -21,13 +21,13 @@ pub fn test_runner(tests: &[&dyn Testable]) {
     for test in tests {
         test.run();
     }
-    // TODO: exit_qemu
+    qemu::exit(qemu::ExitCode::Success);
 }
 
 pub fn test_panic_handler(info: &PanicInfo) -> ! {
     tty_println!("[failed]\n");
     tty_println!("Error: {}\n", info);
-    // TODO: exit_qemu
+    qemu::exit(qemu::ExitCode::Failure);
     loop { }
 }
 
