@@ -75,8 +75,19 @@ impl Tty {
         }
     }
 
-    pub fn set_char_color(&mut self, char_color: vga::CharColor) {
-        self.char_color = char_color;
+    pub fn set_foreground_color(&mut self, foreground_color: vga::Color) {
+        self.char_color.set_foreground(foreground_color);
+    }
+
+    pub fn set_background_color(&mut self, background_color: vga::Color) {
+        self.char_color.set_background(background_color);
+        for row in 0..VGA_HEIGHT {
+            for column in 0..VGA_WIDTH {
+                let mut prev_char = self.buffer[row][column].read();
+                prev_char.char_color.set_background(background_color);
+                self.buffer[row][column].write(prev_char);
+            }
+        }
     }
 }
 
@@ -96,13 +107,6 @@ macro_rules! tty_print {
 macro_rules! tty_println {
     () => ($crate::tty_print!("\n"));
     ($($arg:tt)*) => ($crate::tty_print!("{}\n", format_args!($($arg)*)));
-}
-
-#[macro_export]
-#[deprecated]
-macro_rules! char_color {
-    () => ($crate::char_color!($crate::vga::CharColor::new($crate::vga::Color::White, vga::Color::Black)));
-    ($color:expr) => ($crate::tty::TTY.lock().set_char_color($color));
 }
 
 #[doc(hidden)]

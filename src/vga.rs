@@ -28,13 +28,21 @@ impl CharColor {
     pub fn new(foreground: Color, background: Color) -> Self {
         Self((background as u8) << 4 | (foreground as u8))
     }
+
+    pub fn set_foreground(&mut self, foreground: Color) {
+        self.0 = (self.0 & 0xF0) | (foreground as u8);
+    }
+
+    pub fn set_background(&mut self, background: Color) {
+        self.0 = (background as u8) << 4 | self.0;
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct Char {
-    ibm437_character: u8,
-    char_color: CharColor,
+    pub ibm437_character: u8,
+    pub char_color: CharColor,
 }
 
 impl Char {
