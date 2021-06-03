@@ -49,5 +49,6 @@ pub extern "C" fn _start() -> ! {
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     tty_println!("§4{}§r", info);
+    log_error!("{}", info);
     loop {}
 }

@@ -131,7 +131,7 @@ impl Tty {
             b'd' | b'D' => self.set_foreground_color(vga::Color::Pink),
             b'e' | b'E' => self.set_foreground_color(vga::Color::Yellow),
             b'f' | b'F' => self.set_foreground_color(vga::Color::White),
-            _ => crate::tty_println!("\n[Error] Invalid color code."),
+            _ => crate::log_error!("\nInvalid color code."),
         }
     }
 }
