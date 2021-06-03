@@ -12,14 +12,34 @@ lazy_static! {
 }
 
 #[macro_export]
-macro_rules! serial_print {
+macro_rules! log {
     ($($arg:tt)*) => ($crate::serial::_print(format_args!($($arg)*)));
 }
 
 #[macro_export]
-macro_rules! serial_println {
-    () => ($crate::serial_print!("\n"));
-    ($($arg:tt)*) => ($crate::serial_print!("{}\n", format_args!($($arg)*)));
+macro_rules! logln {
+    () => ($crate::log!("\n"));
+    ($($arg:tt)*) => ($crate::log!("{}\n", format_args!($($arg)*)));
+}
+
+#[macro_export]
+macro_rules! log_debug {
+    ($($arg:tt)*) => ($crate::logln!("[DEBUG] {}", format_args!($($arg)*)));
+}
+
+#[macro_export]
+macro_rules! log_error {
+    ($($arg:tt)*) => ($crate::logln!("[ERROR] {}", format_args!($($arg)*)));
+}
+
+#[macro_export]
+macro_rules! log_info {
+    ($($arg:tt)*) => ($crate::logln!("[INFO ] {}", format_args!($($arg)*)));
+}
+
+#[macro_export]
+macro_rules! log_warn {
+    ($($arg:tt)*) => ($crate::logln!("[WARN ] {}", format_args!($($arg)*)));
 }
 
 #[doc(hidden)]

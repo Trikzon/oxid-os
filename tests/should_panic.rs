@@ -2,24 +2,24 @@
 #![no_main]
 
 use core::panic::PanicInfo;
-use libr_os::{qemu, serial_print, serial_println};
+use libr_os::{log, logln, qemu};
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
     should_fail();
-    serial_println!("[test did not panic]");
+    logln!("[test did not panic]");
     qemu::exit(qemu::ExitCode::Failure);
     loop {}
 }
 
 fn should_fail() {
-    serial_print!("should_panic::should_fail...\t");
+    log!("should_panic::should_fail...\t");
     assert_eq!(0, 1);
 }
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
-    serial_println!("[ok]");
+    logln!("[ok]");
     qemu::exit(qemu::ExitCode::Success);
     loop {}
 }

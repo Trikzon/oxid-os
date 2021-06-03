@@ -1,4 +1,4 @@
-use crate::{qemu, serial_print, serial_println};
+use crate::{log, logln, qemu};
 use core::panic::PanicInfo;
 
 pub trait Testable {
@@ -10,14 +10,14 @@ where
     T: Fn(),
 {
     fn run(&self) {
-        serial_print!("{}...\t", core::any::type_name::<T>());
+        log!("{}...\t", core::any::type_name::<T>());
         self();
-        serial_println!("[ok]");
+        logln!("[ok]");
     }
 }
 
 pub fn test_runner(tests: &[&dyn Testable]) {
-    serial_println!("Running {} tests", tests.len());
+    logln!("Running {} tests", tests.len());
     for test in tests {
         test.run();
     }
@@ -25,8 +25,8 @@ pub fn test_runner(tests: &[&dyn Testable]) {
 }
 
 pub fn test_panic_handler(info: &PanicInfo) -> ! {
-    serial_println!("[failed]\n");
-    serial_println!("Error: {}\n", info);
+    logln!("[failed]\n");
+    logln!("Error: {}\n", info);
     qemu::exit(qemu::ExitCode::Failure);
     loop {}
 }
